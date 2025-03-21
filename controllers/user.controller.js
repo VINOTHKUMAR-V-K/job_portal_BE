@@ -133,17 +133,19 @@ export const login = async (req, res) => {
     };
 
     return res
-      .status(200)
-      .cookie("token", token, {
-        maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        sameSite: "Strict",
-      })
-      .json({
-        message: `Welcome back ${user.fullname}`,
-        user: sanitizedUser,
-        success: true,
-      });
+  .status(200)
+  .cookie("token", token, {
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    httpOnly: true,
+    sameSite: "Strict",
+    secure: process.env.NODE_ENV === "production", // Secure only in production
+  })
+  .json({
+    message: `Welcome back ${user.fullname}`,
+    user: sanitizedUser,
+    success: true,
+  });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({
